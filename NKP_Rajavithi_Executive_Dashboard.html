@@ -1,0 +1,1409 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NKP Rajavithi Executive Dashboard | โรงพยาบาลนครพิงค์ สาขาราชวิถี</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Prompt:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Sarabun', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    h1, h2, h3, h4, .font-heading {
+      font-family: 'Prompt', 'Sarabun', sans-serif;
+    }
+    /* Custom scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.04);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(100, 116, 139, 0.3);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(100, 116, 139, 0.5);
+    }
+    .metric-card {
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .metric-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+    }
+    .tab-btn.active {
+      background-color: #0284c7;
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen">
+
+  <!-- TOP APP HEADER -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div class="flex items-center space-x-3.5">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-sky-600 via-teal-600 to-emerald-500 flex items-center justify-center text-white shadow-md shadow-sky-500/20">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+            </svg>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 border border-sky-200">Executive Report</span>
+              <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">สาขาราชวิถี รพ.นครพิงค์</span>
+              <span class="text-xs text-slate-500">ข้อมูลรอบ 3 ปี (ปีงบฯ 2567 - 2569)</span>
+            </div>
+            <h1 class="text-xl md:text-2xl font-bold text-slate-900 tracking-tight">ระบบแดชบอร์ดบริหารผลลัพธ์การให้บริการผู้ป่วยนอก</h1>
+          </div>
+        </div>
+
+        <!-- Global Action Controls -->
+        <div class="flex items-center gap-2.5">
+          <button onclick="window.print()" class="px-3.5 py-1.5 text-xs font-medium rounded-lg border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 hover:text-slate-900 shadow-sm flex items-center gap-1.5 transition">
+            <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+            พิมพ์รายงาน / PDF
+          </button>
+          <button onclick="exportToCSV()" class="px-3.5 py-1.5 text-xs font-medium rounded-lg bg-slate-900 text-white hover:bg-slate-800 shadow-sm flex items-center gap-1.5 transition">
+            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+            ส่งออก CSV
+          </button>
+        </div>
+      </div>
+
+      <!-- FILTER CONTROLS BAR -->
+      <div class="mt-3.5 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3 text-sm">
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-medium text-slate-500 flex items-center gap-1">
+            <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+            เลือกปีงบประมาณ:
+          </span>
+          <div class="inline-flex p-1 bg-slate-100 rounded-lg text-xs font-medium" id="yearSelector">
+            <button onclick="setYear('all')" id="btn-yr-all" class="px-3 py-1 rounded-md transition text-slate-600 hover:text-slate-900">แนวโน้ม 3 ปี (2567-2569)</button>
+            <button onclick="setYear('2569')" id="btn-yr-2569" class="px-3 py-1 rounded-md transition bg-white text-sky-700 font-semibold shadow-xs">ปี 2569 (ล่าสุด)</button>
+            <button onclick="setYear('2568')" id="btn-yr-2568" class="px-3 py-1 rounded-md transition text-slate-600 hover:text-slate-900">ปี 2568</button>
+            <button onclick="setYear('2567')" id="btn-yr-2567" class="px-3 py-1 rounded-md transition text-slate-600 hover:text-slate-900">ปี 2567</button>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-medium text-slate-500">กลุ่มบริการ:</span>
+          <select id="categoryFilter" onchange="setCategory(this.value)" class="text-xs font-medium bg-slate-100 border border-slate-200 rounded-lg px-2.5 py-1 text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-500">
+            <option value="ALL">ทุกหมวดหมู่บริการ (10 คลินิก/หน่วยบริการ)</option>
+            <option value="MED">ตรวจรักษาโดยแพทย์ (Medical OPD)</option>
+            <option value="LAB">บริการตรวจชันสูตร (Lab & เจาะเลือดล่วงหน้า)</option>
+            <option value="NUR">บริการการพยาบาล (ทำแผล/ฉีดยา)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+    <!-- EXECUTIVE KPI SCORECARD CARDS -->
+    <section>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4" id="kpiContainer">
+        <!-- Rendered dynamically by JS -->
+      </div>
+    </section>
+
+    <!-- NAVIGATION TABS -->
+    <div class="flex flex-wrap items-center justify-between border-b border-slate-200 bg-white px-4 py-2.5 rounded-xl shadow-xs">
+      <div class="flex space-x-1 sm:space-x-2">
+        <button onclick="switchTab('overview')" id="tab-overview" class="tab-btn active px-4 py-2 text-xs sm:text-sm font-medium rounded-lg text-slate-600 hover:text-slate-900 transition flex items-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+          1. ภาพรวมและโครงสร้างบริการ
+        </button>
+        <button onclick="switchTab('monthly')" id="tab-monthly" class="tab-btn px-4 py-2 text-xs sm:text-sm font-medium rounded-lg text-slate-600 hover:text-slate-900 transition flex items-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+          2. สถิติรายเดือน & ความปลอดภัย (ER)
+        </button>
+        <button onclick="switchTab('matrix')" id="tab-matrix" class="tab-btn px-4 py-2 text-xs sm:text-sm font-medium rounded-lg text-slate-600 hover:text-slate-900 transition flex items-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+          3. ตารางข้อมูลเชิงลึก (Deep-Dive Matrix)
+        </button>
+        <button onclick="switchTab('strategy')" id="tab-strategy" class="tab-btn px-4 py-2 text-xs sm:text-sm font-medium rounded-lg text-slate-600 hover:text-slate-900 transition flex items-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+          4. ข้อเสนอแนะเชิงกลยุทธ์ & จำลองปี 2570
+        </button>
+      </div>
+      <div class="hidden lg:flex items-center text-xs text-slate-500">
+        <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 mr-1.5"></span>
+        พร้อมนำเสนอคณะกรรมการบริหาร รพ.
+      </div>
+    </div>
+
+    <!-- TAB 1: OVERVIEW & STRUCTURE -->
+    <div id="view-overview" class="tab-content space-y-6">
+      
+      <!-- EXECUTIVE INSIGHT HERO CALLOUT -->
+      <div class="bg-gradient-to-r from-sky-900 via-indigo-900 to-slate-900 text-white rounded-2xl p-5 md:p-6 shadow-md relative overflow-hidden">
+        <div class="absolute -right-8 -bottom-8 w-64 h-64 bg-sky-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="space-y-2 max-w-3xl">
+            <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-white/10 text-xs font-medium text-sky-200 border border-white/10">
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+              ประเด็นสำคัญเชิงยุทธศาสตร์ (Strategic Paradigm Shift)
+            </div>
+            <h2 class="text-lg md:text-xl font-bold leading-snug">
+              การเปลี่ยนผ่านของสาขาราชวิถี: จาก "คลินิกตรวจรักษาเฉพาะทาง" สู่ "ศูนย์บริการเจาะเลือดและจัดการโรคเรื้อรังแบบกระจายบริการ"
+            </h2>
+            <p class="text-xs md:text-sm text-slate-300 leading-relaxed">
+              ในรอบ 3 ปี (2567-2569) ปริมาณบริการรวมชะลอตัวลง -12.7% (จาก 21,153 สู่ 18,464 ราย) โดยมีคลินิกเฉพาะทางศัลยกรรมและทางเดินปัสสาวะทยอยยุติการให้บริการ แต่ <span class="text-emerald-300 font-semibold underline">บริการเจาะเลือดล่วงหน้า (Pre-Lab รหัส 1836) เติบโตสวนกระแสถึง +40.4%</span> ก้าวขึ้นมามีสัดส่วน 21.7% ของผู้ป่วยทั้งหมด ช่วยลดความแออัดหน้าห้องแล็บโรงพยาบาลแม่ได้อย่างมีนัยสำคัญ
+            </p>
+          </div>
+          <div class="flex flex-col sm:flex-row md:flex-col gap-2 shrink-0">
+            <div class="bg-white/10 backdrop-blur-md rounded-xl p-3 border border-white/15 text-center min-w-[140px]">
+              <div class="text-xs text-sky-200 font-medium">สัดส่วน Pre-Lab</div>
+              <div class="text-2xl font-bold text-emerald-300">21.7%</div>
+              <div class="text-[11px] text-slate-300">เพิ่มขึ้นจาก 13.5% ในปี 67</div>
+            </div>
+            <div class="bg-white/10 backdrop-blur-md rounded-xl p-3 border border-white/15 text-center min-w-[140px]">
+              <div class="text-xs text-sky-200 font-medium">สัดส่วนอายุรกรรม</div>
+              <div class="text-2xl font-bold text-amber-300">67.5%</div>
+              <div class="text-[11px] text-slate-300">ลดลงจาก 75.0% ในปี 67</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CHARTS ROW 1: 3-YEAR MULTI-BAR + DONUT COMPOSITION -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- MAIN CHART: VOLUME COMPARISON (2 COLUMNS) -->
+        <div class="lg:col-span-2 bg-white rounded-2xl p-5 border border-slate-200 shadow-xs flex flex-col justify-between">
+          <div>
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-100 gap-2">
+              <div>
+                <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+                  <span class="w-2.5 h-2.5 rounded-full bg-sky-600"></span>
+                  เปรียบเทียบปริมาณผู้รับบริการแยกตามคลินิก (FY 2567 vs 2568 vs 2569)
+                </h3>
+                <p class="text-xs text-slate-500 mt-0.5">แสดงสถิติจำนวนครั้งการให้บริการในแต่ละคลินิก 10 ห้องตรวจ</p>
+              </div>
+              <div class="flex items-center gap-2 text-xs">
+                <span class="inline-flex items-center gap-1"><span class="w-3 h-3 rounded bg-slate-300"></span> ปี 67</span>
+                <span class="inline-flex items-center gap-1"><span class="w-3 h-3 rounded bg-sky-400"></span> ปี 68</span>
+                <span class="inline-flex items-center gap-1"><span class="w-3 h-3 rounded bg-sky-700"></span> ปี 69</span>
+              </div>
+            </div>
+
+            <!-- SVG Bar Chart Container -->
+            <div class="mt-4 relative" id="multiBarChartContainer">
+              <div class="w-full h-80" id="multiBarChart"></div>
+            </div>
+          </div>
+          
+          <div class="mt-3 pt-3 border-t border-slate-100 text-xs text-slate-500 flex items-center justify-between">
+            <span>* หมายเหตุ: อายุรกรรม (รหัส 2501) เป็นผู้รับบริการกลุ่มใหญ่ที่สุด คิดเป็น 2 ใน 3 ของผู้ป่วยทั้งหมด</span>
+            <span class="font-medium text-sky-700">คลิกที่แท่งกราฟเพื่อดูรายละเอียด</span>
+          </div>
+        </div>
+
+        <!-- DONUT CHART: COMPOSITION (1 COLUMN) -->
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+              <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                สัดส่วนโครงสร้างบริการ (<span id="donutYearLabel">ปี 2569</span>)
+              </h3>
+              <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">สัดส่วน %</span>
+            </div>
+
+            <div class="mt-4 flex flex-col items-center">
+              <div class="relative w-56 h-56 flex items-center justify-center" id="donutChartWrapper">
+                <svg id="donutSvg" class="w-full h-full transform -rotate-90" viewBox="0 0 160 160"></svg>
+                <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
+                  <span class="text-xs text-slate-400 font-medium">ผู้รับบริการรวม</span>
+                  <span class="text-xl font-bold text-slate-900" id="donutCenterTotal">18,464</span>
+                  <span class="text-[11px] text-emerald-600 font-medium" id="donutCenterYear">ปีงบฯ 2569</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Custom Legend -->
+            <div class="mt-4 space-y-1.5 text-xs max-h-40 overflow-y-auto pr-1" id="donutLegend">
+              <!-- Dynamically rendered -->
+            </div>
+          </div>
+
+          <div class="mt-3 pt-3 border-t border-slate-100 text-center text-xs text-slate-400">
+            วางเมาส์เหนือวงแหวนเพื่อดูยอดและร้อยละ
+          </div>
+        </div>
+      </div>
+
+      <!-- CHARTS ROW 2: THE STRATEGIC SHIFT (Pre-Lab vs Medicine vs Specialized) -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        <div class="bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-200 rounded-2xl p-5">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">Growth Star</span>
+            <span class="text-xs font-medium text-emerald-700">+40.4% (3 ปี)</span>
+          </div>
+          <h4 class="text-base font-bold text-slate-900 mt-3">บริการเจาะเลือดล่วงหน้า (1836)</h4>
+          <p class="text-xs text-slate-600 mt-1">ขยายตัวต่อเนื่องทุกปี ช่วยกระจายผู้ป่วยเบาหวาน/ความดัน ไม่ต้องเดินทางเข้า รพ.แม่แต่เช้าตรู่</p>
+          <div class="mt-4 flex items-baseline gap-3">
+            <div>
+              <div class="text-[11px] text-slate-500">ปี 67</div>
+              <div class="text-base font-semibold text-slate-700">2,858</div>
+            </div>
+            <div class="text-slate-300">→</div>
+            <div>
+              <div class="text-[11px] text-slate-500">ปี 68</div>
+              <div class="text-base font-semibold text-slate-700">3,805</div>
+            </div>
+            <div class="text-slate-300">→</div>
+            <div>
+              <div class="text-[11px] text-emerald-700 font-bold">ปี 69</div>
+              <div class="text-xl font-bold text-emerald-700">4,014</div>
+            </div>
+          </div>
+          <div class="mt-3 w-full bg-emerald-200 rounded-full h-1.5">
+            <div class="bg-emerald-600 h-1.5 rounded-full" style="width: 100%"></div>
+          </div>
+        </div>
+
+        <div class="bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-5">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-100 text-amber-800 border border-amber-200">Core Volume</span>
+            <span class="text-xs font-medium text-amber-700">-21.5% (3 ปี)</span>
+          </div>
+          <h4 class="text-base font-bold text-slate-900 mt-3">คลินิกอายุรกรรม (2501)</h4>
+          <p class="text-xs text-slate-600 mt-1">ยังคงเป็นหัวใจหลัก แต่ยอดลดลงปีละประมาณ 1,300 - 2,000 ราย จำเป็นต้องวิเคราะห์ปัจจัยชี้ขาด</p>
+          <div class="mt-4 flex items-baseline gap-3">
+            <div>
+              <div class="text-[11px] text-slate-500">ปี 67</div>
+              <div class="text-base font-semibold text-slate-700">15,871</div>
+            </div>
+            <div class="text-slate-300">→</div>
+            <div>
+              <div class="text-[11px] text-slate-500">ปี 68</div>
+              <div class="text-base font-semibold text-slate-700">14,505</div>
+            </div>
+            <div class="text-slate-300">→</div>
+            <div>
+              <div class="text-[11px] text-amber-800 font-bold">ปี 69</div>
+              <div class="text-xl font-bold text-amber-800">12,465</div>
+            </div>
+          </div>
+          <div class="mt-3 w-full bg-amber-200 rounded-full h-1.5">
+            <div class="bg-amber-600 h-1.5 rounded-full" style="width: 78.5%"></div>
+          </div>
+        </div>
+
+        <div class="bg-gradient-to-br from-slate-50 to-rose-50 border border-rose-200 rounded-2xl p-5">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-rose-100 text-rose-800 border border-rose-200">Sunsetting Clinics</span>
+            <span class="text-xs font-medium text-rose-700">เกือบเป็นศูนย์</span>
+          </div>
+          <h4 class="text-base font-bold text-slate-900 mt-3">ศัลยกรรม &amp; ทางเดินปัสสาวะ (Uro)</h4>
+          <p class="text-xs text-slate-600 mt-1">Uro ลดจาก 211 สู่ 0 ราย, ศัลยกรรมลดจาก 31 สู่ 1 ราย กุมารเวชกรรมลด -46% ควรรีบปรับพื้นที่</p>
+          <div class="mt-4 flex items-baseline gap-3">
+            <div>
+              <div class="text-[11px] text-slate-500">Uro ปี 67</div>
+              <div class="text-base font-semibold text-slate-700">211</div>
+            </div>
+            <div class="text-slate-300">→</div>
+            <div>
+              <div class="text-[11px] text-slate-500">ปี 68</div>
+              <div class="text-base font-semibold text-slate-700">4</div>
+            </div>
+            <div class="text-slate-300">→</div>
+            <div>
+              <div class="text-[11px] text-rose-700 font-bold">ปี 69</div>
+              <div class="text-xl font-bold text-rose-700">0 ราย</div>
+            </div>
+          </div>
+          <div class="mt-3 w-full bg-rose-200 rounded-full h-1.5">
+            <div class="bg-rose-500 h-1.5 rounded-full" style="width: 2%"></div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- TAB 2: MONTHLY TRENDS & PATIENT SAFETY (ER) -->
+    <div id="view-monthly" class="tab-content hidden space-y-6">
+      
+      <!-- MONTHLY CHART -->
+      <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-100 gap-2">
+          <div>
+            <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-indigo-600"></span>
+              การกระจายตัวของปริมาณผู้รับบริการรายเดือน (12 เดือน ปีงบประมาณ 2569)
+            </h3>
+            <p class="text-xs text-slate-500 mt-0.5">วิเคราะห์ฤดูกาลบริการ (Seasonality) จุดสูงสุด (Peak) และจุดต่ำสุด (Trough)</p>
+          </div>
+          <div class="flex items-center gap-3 text-xs">
+            <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-medium">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span> จุดสูงสุด: ก.ย. (1,786 ราย)
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-rose-100 text-rose-800 font-medium">
+              <span class="w-2 h-2 rounded-full bg-rose-500"></span> จุดต่ำสุด: ก.ค. (1,194 ราย)
+            </span>
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <div class="w-full h-80" id="monthlyTrendChart"></div>
+        </div>
+
+        <!-- 4 Quarters Summary Cards -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4 pt-4 border-t border-slate-100">
+          <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-center">
+            <div class="text-xs text-slate-500 font-medium">ไตรมาส 1 (ต.ค. - ธ.ค. 68)</div>
+            <div class="text-lg font-bold text-slate-800 mt-0.5">4,519 ราย</div>
+            <div class="text-[11px] text-slate-500">เฉลี่ย 1,506/เดือน</div>
+          </div>
+          <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-center">
+            <div class="text-xs text-slate-500 font-medium">ไตรมาส 2 (ม.ค. - มี.ค. 69)</div>
+            <div class="text-lg font-bold text-slate-800 mt-0.5">4,607 ราย</div>
+            <div class="text-[11px] text-slate-500">เฉลี่ย 1,536/เดือน</div>
+          </div>
+          <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-center">
+            <div class="text-xs text-slate-500 font-medium">ไตรมาส 3 (เม.ย. - มิ.ย. 69)</div>
+            <div class="text-lg font-bold text-slate-800 mt-0.5">4,763 ราย</div>
+            <div class="text-[11px] text-slate-500">เฉลี่ย 1,588/เดือน (สงกรานต์ เม.ย.)</div>
+          </div>
+          <div class="bg-sky-50 p-3 rounded-xl border border-sky-200 text-center">
+            <div class="text-xs text-sky-700 font-medium">ไตรมาส 4 (ก.ค. - ก.ย. 69) ★</div>
+            <div class="text-lg font-bold text-sky-900 mt-0.5">4,575 ราย</div>
+            <div class="text-[11px] text-sky-700 font-medium">Peak ปลายปีงบฯ (ก.ย. สูงสุด)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PATIENT SAFETY SECTION: ER TRANSFERS -->
+      <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-100 gap-2">
+          <div>
+            <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-rose-100 text-rose-800 text-xs font-semibold mb-1">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+              ดัชนีคุณภาพและความปลอดภัยผู้ป่วย (Patient Safety KPI)
+            </div>
+            <h3 class="text-base font-bold text-slate-900">
+              สถิติการส่งต่อฉุกเฉินไปห้องอุบัติเหตุ-ฉุกเฉิน รพ.นครพิงค์ (ส่ง ER)
+            </h3>
+            <p class="text-xs text-slate-500">ตรวจพบผู้ป่วยมีภาวะวิกฤต/ฉุกเฉินระหว่างรอรับบริการที่สาขาราชวิถี</p>
+          </div>
+          <div class="text-right">
+            <div class="text-2xl font-bold text-rose-600">28 เคส</div>
+            <div class="text-xs text-slate-500">ปี 2569 (0.15% ของผู้ป่วย)</div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-5">
+          <!-- 3-Year ER Trend -->
+          <div class="bg-slate-50 rounded-xl p-4 border border-slate-200">
+            <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">แนวโน้มการส่งต่อ ER ย้อนหลัง 3 ปี</h4>
+            <div class="mt-4 space-y-3">
+              <div>
+                <div class="flex justify-between text-xs font-medium text-slate-600 mb-1">
+                  <span>ปีงบประมาณ 2567</span>
+                  <span class="font-bold">16 เคส (0.076%)</span>
+                </div>
+                <div class="w-full bg-slate-200 rounded-full h-2">
+                  <div class="bg-amber-400 h-2 rounded-full" style="width: 57%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between text-xs font-medium text-slate-600 mb-1">
+                  <span>ปีงบประมาณ 2568</span>
+                  <span class="font-bold">21 เคส (0.102%)</span>
+                </div>
+                <div class="w-full bg-slate-200 rounded-full h-2">
+                  <div class="bg-orange-500 h-2 rounded-full" style="width: 75%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between text-xs font-medium text-slate-900 mb-1">
+                  <span class="font-bold text-rose-700">ปีงบประมาณ 2569</span>
+                  <span class="font-bold text-rose-700">28 เคส (0.152%)</span>
+                </div>
+                <div class="w-full bg-slate-200 rounded-full h-2">
+                  <div class="bg-rose-600 h-2 rounded-full" style="width: 100%"></div>
+                </div>
+              </div>
+            </div>
+            <div class="mt-4 text-[11px] text-slate-500 bg-white p-2.5 rounded-lg border border-slate-200">
+              ⚡ เพิ่มขึ้น +75.0% จากปี 2567 สะท้อนว่าผู้ป่วยนอกที่มารับบริการมีความซับซ้อนของโรคสูงขึ้น หรือระบบ Early Warning คัดกรองตรวจพบภาวะวิกฤตได้รวดเร็วขึ้น
+            </div>
+          </div>
+
+          <!-- Monthly ER Distribution Chart -->
+          <div class="md:col-span-2 bg-slate-50 rounded-xl p-4 border border-slate-200 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">การกระจายตัวของเคสส่ง ER รายเดือน (ปี 2569) และแผนกต้นทาง</h4>
+                <span class="text-xs text-slate-500">ม.ค., มี.ค., เม.ย. ส่งสูงสุดเดือนละ 4 ราย</span>
+              </div>
+              <div class="h-44 w-full" id="erMonthlyBarChart"></div>
+            </div>
+
+            <!-- Clinical Breakdown Notes -->
+            <div class="mt-3 pt-3 border-t border-slate-200 grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+              <div class="bg-white p-2 rounded-lg border border-slate-200">
+                <div class="text-[10px] text-slate-400">กลุ่มโรคหลัก</div>
+                <div class="font-semibold text-slate-800">อายุรกรรม (Med)</div>
+                <div class="text-[11px] text-slate-500">>80% ของเคสวิกฤต</div>
+              </div>
+              <div class="bg-white p-2 rounded-lg border border-slate-200">
+                <div class="text-[10px] text-slate-400">เคสกระดูก</div>
+                <div class="font-semibold text-slate-800">Ortho (2 เคส)</div>
+                <div class="text-[11px] text-slate-500">ต.ค. และ พ.ย.</div>
+              </div>
+              <div class="bg-white p-2 rounded-lg border border-slate-200">
+                <div class="text-[10px] text-slate-400">เคสศัลยกรรม</div>
+                <div class="font-semibold text-slate-800">Surg (2 เคส)</div>
+                <div class="text-[11px] text-slate-500">พ.ย. และ เม.ย.</div>
+              </div>
+              <div class="bg-white p-2 rounded-lg border border-slate-200">
+                <div class="text-[10px] text-slate-400">เคสเฉพาะ</div>
+                <div class="font-semibold text-purple-700">จิตเวช (1 เคส)</div>
+                <div class="text-[11px] text-slate-500">ส่งต่อ ก.ค. 69</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- TAB 3: DEEP-DIVE MATRIX (DATA TABLE) -->
+    <div id="view-matrix" class="tab-content hidden space-y-4">
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+        
+        <!-- Table Toolbar -->
+        <div class="p-4 sm:p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h3 class="text-base font-bold text-slate-900">ตารางวิเคราะห์สถิติบริการแบบจำแนกตามรหัสห้องตรวจ (10 คลินิก)</h3>
+            <p class="text-xs text-slate-500 mt-0.5">คลิกที่แถวของแต่ละคลินิกเพื่อดูสถิติรายเดือนทั้ง 12 เดือน (Expand Monthly Breakdown)</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="relative">
+              <input type="text" id="tableSearch" onkeyup="filterTable(this.value)" placeholder="ค้นหารหัส หรือชื่อคลินิก..." class="text-xs bg-slate-50 border border-slate-200 rounded-lg pl-8 pr-3 py-1.5 w-48 sm:w-64 focus:outline-none focus:ring-2 focus:ring-sky-500">
+              <svg class="w-4 h-4 text-slate-400 absolute left-2.5 top-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive Table -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs" id="clinicTable">
+            <thead class="bg-slate-50/80 text-slate-600 font-semibold border-b border-slate-200 uppercase tracking-wider text-[11px]">
+              <tr>
+                <th class="py-3 px-4">รหัส</th>
+                <th class="py-3 px-4">ชื่อคลินิก / บริการ</th>
+                <th class="py-3 px-3">หมวดหมู่</th>
+                <th class="py-3 px-3 text-right">ปี 2567</th>
+                <th class="py-3 px-3 text-right">ปี 2568</th>
+                <th class="py-3 px-3 text-right font-bold text-slate-900">ปี 2569 (ล่าสุด)</th>
+                <th class="py-3 px-3 text-right">YoY (68-69)</th>
+                <th class="py-3 px-3 text-right">3-Yr Change</th>
+                <th class="py-3 px-3 text-right">สัดส่วนปี 69</th>
+                <th class="py-3 px-4 text-center">ดูสถิติรายเดือน</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 font-normal text-slate-700" id="clinicTableBody">
+              <!-- Dynamically populated -->
+            </tbody>
+            <tfoot class="bg-slate-100/80 font-bold text-slate-900 border-t-2 border-slate-300 text-xs">
+              <tr>
+                <td class="py-3 px-4" colspan="3">รวมผู้รับบริการทั้งหมด (Grand Total)</td>
+                <td class="py-3 px-3 text-right">21,153</td>
+                <td class="py-3 px-3 text-right">20,628</td>
+                <td class="py-3 px-3 text-right text-sky-800 text-sm">18,464</td>
+                <td class="py-3 px-3 text-right text-rose-600">-10.5%</td>
+                <td class="py-3 px-3 text-right text-rose-600">-12.7%</td>
+                <td class="py-3 px-3 text-right">100.0%</td>
+                <td class="py-3 px-4 text-center text-slate-400">-</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: EXECUTIVE STRATEGY & FY2570 SIMULATOR -->
+    <div id="view-strategy" class="tab-content hidden space-y-6">
+      
+      <!-- 4 STRATEGIC RECOMMENDATIONS CARDS -->
+      <div>
+        <div class="mb-4">
+          <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-indigo-100 text-indigo-800 border border-indigo-200">Executive Strategic Roadmap</span>
+          <h3 class="text-xl font-bold text-slate-900 mt-1">4 ข้อเสนอแนะเชิงนโยบายเพื่อนำเสนอคณะผู้บริหาร รพ.นครพิงค์</h3>
+          <p class="text-xs text-slate-500">แปลงผลการวิเคราะห์ข้อมูลสถิติ 3 ปี สู่แผนปฏิบัติการพัฒนาสาขาราชวิถีอย่างยั่งยืน</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          
+          <!-- Recommendation 1 -->
+          <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs hover:border-sky-300 transition space-y-3">
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-xl bg-sky-100 text-sky-700 font-bold flex items-center justify-center shrink-0">
+                1
+              </div>
+              <h4 class="text-sm font-bold text-slate-900">
+                ปรับตำแหน่งยุทธศาสตร์สู่ "NKP Chronic Care & Diagnostic Decentralization Hub"
+              </h4>
+            </div>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              สถิติชี้ชัดว่าบริการหลักที่แท้จริงคือ <span class="font-semibold text-slate-800">อายุรกรรม (67.5%) และการเจาะเลือดล่วงหน้า (21.7%)</span> ซึ่งรวมกันสูงถึง 89.2% ของงานทั้งหมด เสนอให้ผู้บริหารประกาศบทบาทสาขาราชวิถีให้ชัดเจนว่าไม่ใช่คลินิกเฉพาะทางเบ็ดเตล็ด แต่เป็น <strong>"ศูนย์จัดการโรคไม่ติดต่อเรื้อรัง (NCDs) และจุดเจาะเลือดตรวจแล็บกระจายบริการ"</strong> เพื่อลดความแออัดของโรงพยาบาลศูนย์นครพิงค์อย่างเป็นรูปธรรม
+            </p>
+            <div class="bg-sky-50 p-2.5 rounded-lg border border-sky-100 text-[11px] text-sky-800">
+              🎯 <strong>เป้าหมายเชิงผลลัพธ์:</strong> ลดเวลารอคอยเจาะเลือดที่ รพ.แม่ ลง 30% และขยายฐานผู้ป่วย NCD นัดตรวจใกล้บ้าน
+            </div>
+          </div>
+
+          <!-- Recommendation 2 -->
+          <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs hover:border-emerald-300 transition space-y-3">
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-700 font-bold flex items-center justify-center shrink-0">
+                2
+              </div>
+              <h4 class="text-sm font-bold text-slate-900">
+                บริหารจัดการพื้นที่และทรัพยากร (Space & Resource Reallocation)
+              </h4>
+            </div>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              คลินิกทางเดินปัสสาวะ (Uro) และศัลยกรรมทั่วไปมียอดผู้รับบริการลดลงจนเหลือ 0-1 ราย/ปี และกุมารเวชกรรมลดลง -46% จึงเสนอให้ <strong>ยุบเลิกตารางห้องตรวจเฉพาะทางที่ไม่มีแพทย์ลงตรวจ</strong> และนำพื้นที่ห้องตรวจ (Physical Space) พร้อมพยาบาลประจำห้อง มาปรับเป็น:
+              <ul class="list-disc list-inside mt-1 space-y-0.5 text-slate-700 font-medium">
+                <li>จุดเจาะเลือด Fast-track Phlebotomy Station เพิ่มเป็น 2-3 โต๊ะ</li>
+                <li>ห้องสังเกตอาการฉุกเฉินชั่วคราว (Observation & Resuscitation Room)</li>
+              </ul>
+            </p>
+            <div class="bg-emerald-50 p-2.5 rounded-lg border border-emerald-100 text-[11px] text-emerald-800">
+              🎯 <strong>เป้าหมายเชิงผลลัพธ์:</strong> คืนพื้นที่ใช้สอยให้คุ้มค่า 100% ขจัด idle capacity และเพิ่มขีดความสามารถเจาะเลือด
+            </div>
+          </div>
+
+          <!-- Recommendation 3 -->
+          <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs hover:border-amber-300 transition space-y-3">
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-800 font-bold flex items-center justify-center shrink-0">
+                3
+              </div>
+              <h4 class="text-sm font-bold text-slate-900">
+                สืบค้นหาสาเหตุยอดอายุรกรรมลดลง (-21.5%) และจัดบริการเชิงรุก
+              </h4>
+            </div>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              ผู้ป่วยอายุรกรรมลดลงจาก 15,871 ราย สู่ 12,465 ราย (-3,406 รายใน 3 ปี) ผู้บริหารควรตั้งคณะทำงานร่วมกับกลุ่มงานอายุรกรรม เพื่อวิเคราะห์ Root Causes เช่น ความถี่รอบนัดของผู้ป่วย (ขยายเป็นนัด 3-6 เดือน), การรับยา รพ.สต./ส่งยาไปรษณีย์, หรือมีข้อจำกัดเรื่องคลังยาที่สาขา พร้อมจัดโปรแกรม Fast-track refill เพื่อรักษาฐานผู้รับบริการ
+            </p>
+            <div class="bg-amber-50 p-2.5 rounded-lg border border-amber-100 text-[11px] text-amber-900">
+              🎯 <strong>เป้าหมายเชิงผลลัพธ์:</strong> ดึงผู้ป่วย NCDs เสถียรกลับมารับบริการที่สาขาราชวิถีอย่างน้อย 13,500 - 14,000 ราย/ปี
+            </div>
+          </div>
+
+          <!-- Recommendation 4 -->
+          <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs hover:border-rose-300 transition space-y-3">
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-xl bg-rose-100 text-rose-800 font-bold flex items-center justify-center shrink-0">
+                4
+              </div>
+              <h4 class="text-sm font-bold text-slate-900">
+                ยกระดับความปลอดภัยระบบส่งต่อฉุกเฉิน (Safe ER Fast-Track Protocol)
+              </h4>
+            </div>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              สถิติการส่งต่อฉุกเฉินเพิ่มขึ้นต่อเนื่องจาก 16 สู่ 28 เคส/ปี (+75%) โดยส่วนใหญ่เป็นเคสอายุรกรรม (เช่น Acute Chest Pain, Severe Dyspnea, Hypoglycemia) เสนอให้จัดทำ <strong>"Green Channel Referral Protocol"</strong> ร่วมกับห้องฉุกเฉิน รพ.นครพิงค์ พร้อมสนับสนุนเครื่องกระตุกหัวใจอัตโนมัติ (AED), ชุดกู้ชีพฉุกเฉิน, และการซ้อมแผนภาวะวิกฤตสม่ำเสมอ
+            </p>
+            <div class="bg-rose-50 p-2.5 rounded-lg border border-rose-100 text-[11px] text-rose-900">
+              🎯 <strong>เป้าหมายเชิงผลลัพธ์:</strong> Zero Mortality ที่สาขา, อัตราเวลาส่งต่อถึง ER รพ.แม่ รวดเร็ว ปลอดภัยตามมาตรฐาน
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- FY2570 TARGET SIMULATOR -->
+      <div class="bg-gradient-to-br from-slate-900 to-indigo-950 text-white rounded-2xl p-6 border border-slate-800 shadow-lg">
+        <div class="flex flex-col md:flex-row md:items-center justify-between pb-5 border-b border-slate-800 gap-3">
+          <div>
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-300 text-xs font-semibold border border-sky-500/30">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+              Executive Interactive Simulator
+            </div>
+            <h3 class="text-lg font-bold mt-1.5 text-white">เครื่องมือจำลองเป้าหมายและประมาณการผู้รับบริการ ปีงบประมาณ 2570</h3>
+            <p class="text-xs text-slate-300 mt-0.5">ทดลองปรับสไลเดอร์เป้าหมายนโยบาย เพื่อประเมินยอดรับบริการรวมและกำลังคนที่ต้องการ</p>
+          </div>
+          <button onclick="resetSimulation()" class="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/15 text-xs text-slate-200 border border-white/15 transition self-start md:self-auto">
+            รีเซ็ตค่าเริ่มต้น (ปี 69)
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6">
+          
+          <!-- Sliders Area (7 cols) -->
+          <div class="lg:col-span-7 space-y-4">
+            
+            <!-- Slider 1: Pre-Lab -->
+            <div class="bg-white/5 p-4 rounded-xl border border-white/10 space-y-2">
+              <div class="flex justify-between items-center text-xs">
+                <span class="font-semibold text-emerald-300">1. เป้าหมายเจาะเลือดล่วงหน้า (Pre-Lab 1836)</span>
+                <span class="font-bold text-white text-sm" id="simValPreLab">4,500 ราย (+12.1%)</span>
+              </div>
+              <input type="range" id="simRangePreLab" min="3500" max="6000" step="50" value="4500" oninput="runSimulation()" class="w-full accent-emerald-500 cursor-pointer">
+              <div class="flex justify-between text-[10px] text-slate-400">
+                <span>3,500 ราย</span>
+                <span>ฐานเดิมปี 69: 4,014 ราย</span>
+                <span>เป้าท้าทาย: 6,000 ราย</span>
+              </div>
+            </div>
+
+            <!-- Slider 2: Medicine -->
+            <div class="bg-white/5 p-4 rounded-xl border border-white/10 space-y-2">
+              <div class="flex justify-between items-center text-xs">
+                <span class="font-semibold text-sky-300">2. เป้าหมายคลินิกอายุรกรรม (2501)</span>
+                <span class="font-bold text-white text-sm" id="simValMed">13,500 ราย (+8.3%)</span>
+              </div>
+              <input type="range" id="simRangeMed" min="11000" max="16000" step="100" value="13500" oninput="runSimulation()" class="w-full accent-sky-500 cursor-pointer">
+              <div class="flex justify-between text-[10px] text-slate-400">
+                <span>11,000 ราย</span>
+                <span>ฐานเดิมปี 69: 12,465 ราย</span>
+                <span>ฟื้นฟูเต็มที่: 16,000 ราย</span>
+              </div>
+            </div>
+
+            <!-- Slider 3: Nursing & Ortho -->
+            <div class="bg-white/5 p-4 rounded-xl border border-white/10 space-y-2">
+              <div class="flex justify-between items-center text-xs">
+                <span class="font-semibold text-amber-300">3. คลินิกอื่นๆ รวม (Ortho, ทำแผล, สูติฯ, ตรวจสุขภาพ)</span>
+                <span class="font-bold text-white text-sm" id="simValOther">2,000 ราย (+0.8%)</span>
+              </div>
+              <input type="range" id="simRangeOther" min="1500" max="3000" step="50" value="2000" oninput="runSimulation()" class="w-full accent-amber-500 cursor-pointer">
+              <div class="flex justify-between text-[10px] text-slate-400">
+                <span>1,500 ราย</span>
+                <span>ฐานเดิมปี 69: 1,985 ราย</span>
+                <span>3,000 ราย</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Simulation Projection Output (5 cols) -->
+          <div class="lg:col-span-5 bg-gradient-to-br from-indigo-900/60 to-purple-900/40 p-5 rounded-xl border border-indigo-500/30 flex flex-col justify-between space-y-4">
+            <div>
+              <div class="text-xs font-semibold uppercase tracking-wider text-indigo-300">ผลการคำนวณแบบจำลอง ปี 2570</div>
+              
+              <div class="mt-4">
+                <div class="text-xs text-slate-300">ยอดผู้รับบริการรวมทั้งสิ้น (Projected Annual Visits)</div>
+                <div class="text-3xl font-extrabold text-white mt-0.5" id="simResultTotal">20,000 ราย</div>
+                <div class="text-xs text-emerald-400 mt-1 font-medium" id="simResultGrowth">+8.3% เทียบปี 2569</div>
+              </div>
+
+              <div class="mt-4 pt-4 border-t border-white/10 grid grid-cols-2 gap-3 text-xs">
+                <div>
+                  <span class="text-slate-400">เฉลี่ยต่อวันทำการ</span>
+                  <div class="text-base font-bold text-white" id="simResultDaily">91 ราย/วัน</div>
+                </div>
+                <div>
+                  <span class="text-slate-400">สัดส่วน Pre-Lab</span>
+                  <div class="text-base font-bold text-emerald-300" id="simResultPreLabPct">22.5%</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Resource Requirement Suggestion -->
+            <div class="bg-black/30 p-3 rounded-lg border border-white/10 text-xs space-y-1">
+              <div class="font-bold text-amber-300">⚡ กำลังคนและทรัพยากรที่ต้องเตรียมรองรับ:</div>
+              <div class="text-slate-300 text-[11px]" id="simResourceText">
+                • แพทย์ตรวจอายุรกรรม: 1-2 ท่าน/วัน<br>
+                • เจ้าหน้าที่เจาะเลือด: 2 ท่าน ช่วง 07:00 - 11:00 น.<br>
+                • พยาบาลประจำคลินิก &amp; คัดกรองฉุกเฉิน: 3-4 ท่าน
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="mt-12 bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div>
+        <span class="font-semibold text-slate-700">โรงพยาบาลนครพิงค์ สาขาราชวิถี</span> | กลุ่มงานสารสนเทศและเวชระเบียน
+      </div>
+      <div>
+        อ้างอิงข้อมูล: <span class="text-slate-600 font-mono">ยอดสาขาแยก ตามรหัสคลินิก ปี69.xlsx</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- DETAIL MODAL / POPUP (For monthly drill-down) -->
+  <div id="detailModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div>
+          <span class="text-xs font-semibold px-2 py-0.5 rounded bg-sky-100 text-sky-800" id="modalClinicCode">CODE</span>
+          <h3 class="text-base font-bold text-slate-900 mt-1" id="modalClinicName">Clinic Name</h3>
+        </div>
+        <button onclick="closeModal()" class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 hover:text-slate-900 flex items-center justify-center">
+          ✕
+        </button>
+      </div>
+
+      <div class="grid grid-cols-3 gap-3 text-center text-xs">
+        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+          <div class="text-slate-400">ยอดปี 2567</div>
+          <div class="text-base font-bold text-slate-800" id="modalTot67">-</div>
+        </div>
+        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+          <div class="text-slate-400">ยอดปี 2568</div>
+          <div class="text-base font-bold text-slate-800" id="modalTot68">-</div>
+        </div>
+        <div class="bg-sky-50 p-3 rounded-xl border border-sky-200">
+          <div class="text-sky-700 font-medium">ยอดปี 2569 (ล่าสุด)</div>
+          <div class="text-lg font-bold text-sky-900" id="modalTot69">-</div>
+        </div>
+      </div>
+
+      <!-- 12-Month Table -->
+      <div>
+        <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">สถิติรายเดือน ปีงบประมาณ 2569 (12 เดือน)</h4>
+        <div class="grid grid-cols-3 sm:grid-cols-6 gap-2 text-center text-xs" id="modalMonthsGrid">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-slate-100 flex justify-end">
+        <button onclick="closeModal()" class="px-4 py-1.5 text-xs font-medium rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700">
+          ปิดหน้าต่าง
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- EMBEDDED DASHBOARD SCRIPT & DATA -->
+  <script>
+    const DASHBOARD_DATA = {"months": ["ต.ค.", "พ.ย.", "ธ.ค.", "ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย."], "years": ["2567", "2568", "2569"], "clinic_meta": {"2501": {"name": "คลินิกอายุรกรรม", "category": "แพทย์ตรวจรักษา (Medical OPD)", "color": "#3b82f6", "icon": "stethoscope"}, "1836": {"name": "เจาะเลือดล่วงหน้า (Pre-Lab)", "category": "บริการชันสูตร (Lab & Diagnostics)", "color": "#10b981", "icon": "flask"}, "2513": {"name": "ทำแผล ฉีดยา (หัตถการพยาบาล)", "category": "บริการพยาบาล (Nursing Procedure)", "color": "#f59e0b", "icon": "bandage"}, "2504": {"name": "คลินิกศัลยกรรมกระดูก (Ortho)", "category": "แพทย์ตรวจรักษา (Medical OPD)", "color": "#8b5cf6", "icon": "bone"}, "2505": {"name": "คลินิกสูตินรีเวชกรรม (Gyn)", "category": "แพทย์ตรวจรักษา (Medical OPD)", "color": "#ec4899", "icon": "venus"}, "2506": {"name": "คลินิกกุมารเวชกรรม (Ped)", "category": "แพทย์ตรวจรักษา (Medical OPD)", "color": "#06b6d4", "icon": "baby"}, "2515": {"name": "คลินิกตรวจสุขภาพ", "category": "บริการชันสูตร (Lab & Diagnostics)", "color": "#14b8a6", "icon": "heart-pulse"}, "2500": {"name": "ตรวจคัดกรอง/ทั่วไปสาขา", "category": "แพทย์ตรวจรักษา (Medical OPD)", "color": "#64748b", "icon": "clipboard"}, "2502": {"name": "คลินิกศัลยกรรมทั่วไป", "category": "แพทย์ตรวจรักษา (Medical OPD)", "color": "#ef4444", "icon": "scalpel"}, "2503": {"name": "คลินิกทางเดินปัสสาวะ (Uro)", "category": "แพทย์ตรวจรักษา (Medical OPD)", "color": "#f97316", "icon": "droplet"}}, "annual_totals": {"2567": {"visits": 21153, "avg_daily": 83, "er": 16, "er_rate": 0.076}, "2568": {"visits": 20628, "avg_daily": 94, "er": 21, "er_rate": 0.102}, "2569": {"visits": 18464, "avg_daily": 85, "er": 28, "er_rate": 0.152}}, "by_year": {"2567": {"clinics": [{"code": "2501", "name": "คลินิกอายุรกรรม", "raw_name": "อายุรกรรมราชวิถีนครพิงค์", "category": "แพทย์ตรวจรักษา (Medical OPD)", "monthly": [1577, 1424, 1635, 1649, 1022, 1480, 1333, 1058, 962, 1162, 1220, 1349], "total": 15871, "color": "#3b82f6"}, {"code": "1836", "name": "เจาะเลือดล่วงหน้า (Pre-Lab)", "raw_name": "เจาะเลือดล่วงหน้าราชวิถีนครพิงค์", "category": "บริการชันสูตร (Lab & Diagnostics)", "monthly": [294, 197, 253, 179, 96, 183, 121, 163, 253, 275, 603, 241], "total": 2858, "color": "#10b981"}, {"code": "2504", "name": "คลินิกศัลยกรรมกระดูก (Ortho)", "raw_name": "ศัลยกรรมOrtho ราชวิถีนครพิงค์", "category": "แพทย์ตรวจรักษา (Medical OPD)", "monthly": [57, 58, 66, 68, 76, 70, 59, 80, 55, 72, 80, 52], "total": 793, "color": "#8b5cf6"}, {"code": "2513", "name": "ทำแผล ฉีดยา (หัตถการพยาบาล)", "raw_name": "ทำแผล ฉีดยาราชวิถีนครพิงค์", "category": "บริการพยาบาล (Nursing Procedure)", "monthly": [122, 67, 78, 88, 77, 59, 30, 18, 60, 10, 107, 67], "total": 783, "color": "#f59e0b"}, {"code": "2506", "name": "คลินิกกุมารเวชกรรม (Ped)", "raw_name": "กุมารเวชกรรมทั่วไป ราชวิถีนครพิงค์", "category": "แพทย์ตรวจรักษา (Medical OPD)", "monthly": [31, 28, 36, 35, 19, 25, 17, 21, 20, 38, 24, 35], "total": 329, "color": "#06b6d4"}, {"code": "2505", "name": "คลินิกสูตินรีเวชกรรม (Gyn)", "raw_name": "สูตินรีเวชกรรมราชวิถีนครพิงค์", "category": "แพทย์ตรวจรักษา (Medical OPD)", "monthly": [15, 22, 23, 20, 20, 26, 21, 18, 17, 21, 22, 23], "total": 248, "color": "#ec4899"}, {"code": "2503", "name": "คลินิกทางเดินปัสสาวะ (Uro)", "raw_name": "คลินิกUroราชวิถีนครพิงค์", "category": "แพทย์ตรวจรักษา (Medical OPD)", "monthly": [12, 18, 26, 31, 16, 34, 17, 7, 21, 17, 5, 7], "total": 211, "color": "#f97316"}, {"code": "2502", "name": "คลินิกศัลยกรรมทั่วไป", "raw_name": "ศัลยกรรมทั่วไปราชวิถีนครพิงค์", "category": "แพทย์ตรวจรักษา (Medical OPD)", "monthly": [0, 7, 10, 9, 1, 3, 1, 0, 0, 0, 0, 0], "total": 31, "color": "#ef4444"}, {"code": "2515", "name": "คลินิกตรวจสุขภาพ", "raw_name": "คลินิกตรวจสุขภาพราชวิถีนครพิงค์", "category": "บริการชันสูตร (Lab & Diagnostics)", "monthly": [1, 0, 1, 1, 0, 0, 0, 1, 2, 5, 3, 3], "total": 17, "color": "#14b8a6"}, {"code": "2500", "name": "ตรวจคัดกรอง/ทั่วไปสาขา", "raw_name": "ราชวิถีนครพิงค์", "category": "แพทย์ตรวจรักษา (Medical OPD)", "monthly": [1, 1, 3, 0, 1, 4, 2, 0, 0, 0, 0, 0], "total": 12, "color": "#64748b"}], "total_monthly": [2110, 1822, 2131, 2080, 1328, 1884, 1601, 1184, 1137, 1600, 2064, 1777], "er_monthly": [0, 0, 2, 1, 2, 3, 3, 1, 1, 1, 1, 1], "er_notes": {}}, "2568": {"clinics": [{"code": "2501", "name": "คลินิกอายุรกรรม", "raw_name": "อายุรกรรมราชวิถีนครพิงค์", "category": "แพทย์ตรวจรักษา (Medical OPD)", "monthly": [1149, 1436, 1179, 1215, 1185, 1191, 1166, 1233, 1144, 1208, 1238, 1161], "total": 14505, "color": "#3b82f6"}, {"code": "1836", "name": "เจาะเลือดล่วงหน้า (Pre-Lab)", "raw_name": "เจาะเลือดล่วงหน้าราชวิถีนครพิงค์", "category": "บริการชันสูตร (Lab & Diagnostics)", "monthly": [255, 336, 287, 320, 321, 318, 302, 320, 283, 341, 377, 345], "total": 3805, "color": "#10b981"}, {"code": "2513", "name": "ทำแผล ฉีดยา (หัตถการพยาบาล)", "raw_name": "ทำแผล ฉีดยาราชวิถีนครพิงค์", "category": "บริการพยาบาล (Nursing Procedure)", "monthly": [44, 85, 43, 77, 89, 133, 81, 60, 58, 60, 86, 120], "total": 936, "color": "#f59e0b"}, {"code": "2504", "name": "คลินิกศัลยกรรมกระดูก (Ortho)", "raw_name": "Ortho ราชวิถีนครพิงค์", "category": "แพทย์ตรวจรักษา (Medical OPD)", "monthly": [78, 69, 63, 84, 54, 64, 65, 65, 80, 64, 71, 68], "total": 825, "color": "#8b5cf6"}, {"code": "2506", "name": "คลินิกกุมารเวชกรรม (Ped)", "raw_name": "Ped ราชวิถีนครพิงค์", "category": "แพทย์ตรวจรักษา (Medical OPD)", "monthly": [30, 38, 34, 35, 22, 22, 27, 16, 27, 22, 19, 31], "total": 323, "color": "#06b6d4"}, {"code": "2505", "name": "คลินิกสูตินรีเวชกรรม (Gyn)", "raw_name": "Gyn ราชวิถีนครพิงค์", "category": "แพทย์ตรวจรักษา (Medical OPD)", "monthly": [15, 21, 17, 19, 17, 11, 12, 15, 19, 14, 11, 25], "total": 196, "color": "#ec4899"}, {"code": "2515", "name": "คลินิกตรวจสุขภาพ", "raw_name": "ตรวจสุขภาพราชวิถีนครพิงค์", "category": "บริการชันสูตร (Lab & Diagnostics)", "monthly": [0, 5, 7, 0, 0, 2, 2, 4, 0, 1, 2, 1], "total": 24, "color": "#14b8a6"}, {"code": "2500", "name": "ตรวจคัดกรอง/ทั่วไปสาขา", "raw_name": "ราชวิถีนครพิงค์", "category": "แพทย์ตรวจรักษา (Medical OPD)", "monthly": [0, 1, 0, 2, 0, 0, 2, 0, 0, 0, 0, 0], "total": 5, "color": "#64748b"}, {"code": "2502", "name": "คลินิกศัลยกรรมทั่วไป", "raw_name": "ศัลยกรรมราชวิถีนครพิงค์", "category": "แพทย์ตรวจรักษา (Medical OPD)", "monthly": [0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1], "total": 5, "color": "#ef4444"}, {"code": "2503", "name": "คลินิกทางเดินปัสสาวะ (Uro)", "raw_name": "Uroราชวิถีนครพิงค์", "category": "แพทย์ตรวจรักษา (Medical OPD)", "monthly": [1, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "total": 4, "color": "#f97316"}], "total_monthly": [1572, 1995, 1630, 1752, 1689, 1742, 1657, 1713, 1611, 1710, 1805, 1752], "er_monthly": [5, 2, 2, 3, 1, 1, 0, 0, 1, 2, 3, 1], "er_notes": {}}, "2569": {"clinics": [{"code": "2501", "name": "คลินิกอายุรกรรม", "raw_name": "อายุรกรรมราชวิถีนครพิงค์", "category": "แพทย์ตรวจรักษา (Medical OPD)", "monthly": [950, 972, 1102, 913, 1149, 1055, 883, 1132, 1220, 836, 1028, 1225], "total": 12465, "color": "#3b82f6"}, {"code": "1836", "name": "เจาะเลือดล่วงหน้า (Pre-Lab)", "raw_name": "เจาะเลือดล่วงหน้าราชวิถี", "category": "บริการชันสูตร (Lab & Diagnostics)", "monthly": [310, 326, 332, 329, 322, 359, 295, 414, 323, 227, 411, 366], "total": 4014, "color": "#10b981"}, {"code": "2513", "name": "ทำแผล ฉีดยา (หัตถการพยาบาล)", "raw_name": "ทำแผล ฉีดยาราชวิถีนครพิงค์", "category": "บริการพยาบาล (Nursing Procedure)", "monthly": [123, 70, 56, 74, 72, 45, 54, 64, 96, 69, 54, 85], "total": 862, "color": "#f59e0b"}, {"code": "2504", "name": "คลินิกศัลยกรรมกระดูก (Ortho)", "raw_name": "Ortho ราชวิถีนครพิงค์", "category": "แพทย์ตรวจรักษา (Medical OPD)", "monthly": [52, 50, 52, 59, 61, 71, 56, 73, 53, 37, 72, 69], "total": 705, "color": "#8b5cf6"}, {"code": "2505", "name": "คลินิกสูตินรีเวชกรรม (Gyn)", "raw_name": "Gyn ราชวิถีนครพิงค์", "category": "แพทย์ตรวจรักษา (Medical OPD)", "monthly": [23, 25, 12, 13, 18, 14, 9, 27, 20, 13, 22, 21], "total": 217, "color": "#ec4899"}, {"code": "2506", "name": "คลินิกกุมารเวชกรรม (Ped)", "raw_name": "Ped ราชวิถีนครพิงค์", "category": "แพทย์ตรวจรักษา (Medical OPD)", "monthly": [24, 13, 20, 18, 16, 14, 14, 10, 11, 10, 8, 17], "total": 175, "color": "#06b6d4"}, {"code": "2515", "name": "คลินิกตรวจสุขภาพ", "raw_name": "ตรวจสุขภาพราชวิถีนครพิงค์", "category": "บริการชันสูตร (Lab & Diagnostics)", "monthly": [2, 2, 3, 3, 0, 0, 2, 7, 0, 2, 0, 3], "total": 24, "color": "#14b8a6"}, {"code": "2500", "name": "ตรวจคัดกรอง/ทั่วไปสาขา", "raw_name": "ราชวิถีนครพิงค์", "category": "แพทย์ตรวจรักษา (Medical OPD)", "monthly": [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0], "total": 1, "color": "#64748b"}, {"code": "2502", "name": "คลินิกศัลยกรรมทั่วไป", "raw_name": "ศัลยกรรมราชวิถีนครพิงค์", "category": "แพทย์ตรวจรักษา (Medical OPD)", "monthly": [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0], "total": 1, "color": "#ef4444"}, {"code": "2503", "name": "คลินิกทางเดินปัสสาวะ (Uro)", "raw_name": "Uroราชวิถีนครพิงค์", "category": "แพทย์ตรวจรักษา (Medical OPD)", "monthly": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "total": 0, "color": "#f97316"}], "total_monthly": [1484, 1458, 1577, 1410, 1639, 1558, 1313, 1727, 1723, 1194, 1595, 1786], "er_monthly": [2, 2, 0, 4, 1, 4, 4, 1, 2, 3, 3, 2], "er_notes": {"ต.ค.": "Med+Ortho", "พ.ย.": "surg+ortho", "ก.พ.": "Med", "มี.ค.": "Med", "เม.ย.": "Med3Surg1", "พ.ค.": "Med", "มิ.ย.": "Med", "ก.ค.": "Med2จิตเวช1", "ส.ค.": "Med"}}}};
+    let currentYear = '2569';
+    let currentCategory = 'ALL';
+
+    // Initialize Dashboard
+    document.addEventListener('DOMContentLoaded', () => {
+      renderKpis();
+      renderMultiBarChart();
+      renderDonutChart();
+      renderMonthlyChart();
+      renderErChart();
+      renderClinicTable();
+      runSimulation();
+    });
+
+    // Tab Switching
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(view => view.classList.add('hidden'));
+
+      const activeBtn = document.getElementById('tab-' + tabId);
+      if (activeBtn) activeBtn.classList.add('active');
+
+      const activeView = document.getElementById('view-' + tabId);
+      if (activeView) activeView.classList.remove('hidden');
+
+      // Re-render chart if needed for correct width
+      if (tabId === 'overview') {
+        renderMultiBarChart();
+        renderDonutChart();
+      } else if (tabId === 'monthly') {
+        renderMonthlyChart();
+        renderErChart();
+      }
+    }
+
+    // Year Switcher
+    function setYear(yr) {
+      currentYear = yr;
+      document.querySelectorAll('#yearSelector button').forEach(btn => {
+        btn.className = "px-3 py-1 rounded-md transition text-slate-600 hover:text-slate-900";
+      });
+      const activeBtn = document.getElementById('btn-yr-' + yr);
+      if (activeBtn) {
+        activeBtn.className = "px-3 py-1 rounded-md transition bg-white text-sky-700 font-semibold shadow-xs";
+      }
+
+      renderKpis();
+      renderDonutChart();
+      renderClinicTable();
+    }
+
+    // Category Filter
+    function setCategory(cat) {
+      currentCategory = cat;
+      renderClinicTable();
+      renderMultiBarChart();
+    }
+
+    // Render KPIs
+    function renderKpis() {
+      const container = document.getElementById('kpiContainer');
+      const yr = currentYear === 'all' ? '2569' : currentYear;
+      const yrData = DASHBOARD_DATA.annual_totals[yr] || DASHBOARD_DATA.annual_totals['2569'];
+      const prevYr = yr === '2569' ? '2568' : (yr === '2568' ? '2567' : null);
+      const prevData = prevYr ? DASHBOARD_DATA.annual_totals[prevYr] : null;
+
+      let growthBadge = '';
+      if (prevData) {
+        const diff = yrData.visits - prevData.visits;
+        const pct = ((diff / prevData.visits) * 100).toFixed(1);
+        const isUp = diff >= 0;
+        growthBadge = `<span class="inline-flex items-center text-[11px] font-semibold ${isUp ? 'text-emerald-600' : 'text-rose-600'}">
+          ${isUp ? '↑' : '↓'} ${pct}% YoY
+        </span>`;
+      } else {
+        growthBadge = `<span class="text-[11px] text-slate-400">ฐานเริ่มต้น</span>`;
+      }
+
+      // Find Med & Pre-Lab
+      const clinics = DASHBOARD_DATA.by_year[yr].clinics;
+      const medClinic = clinics.find(c => c.code === '2501') || { total: 0 };
+      const labClinic = clinics.find(c => c.code === '1836') || { total: 0 };
+
+      const medPct = ((medClinic.total / yrData.visits) * 100).toFixed(1);
+      const labPct = ((labClinic.total / yrData.visits) * 100).toFixed(1);
+
+      container.innerHTML = `
+        <!-- KPI 1 -->
+        <div class="metric-card bg-white rounded-2xl p-4 border border-slate-200 shadow-xs flex flex-col justify-between">
+          <div class="flex items-center justify-between text-slate-500">
+            <span class="text-xs font-semibold text-slate-600 uppercase tracking-wider">ผู้รับบริการรวม</span>
+            <div class="w-7 h-7 rounded-lg bg-sky-100 text-sky-600 flex items-center justify-center">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+            </div>
+          </div>
+          <div class="mt-2">
+            <div class="text-2xl font-bold text-slate-900">${yrData.visits.toLocaleString()} <span class="text-xs font-normal text-slate-500">ครั้ง</span></div>
+            <div class="flex items-center justify-between mt-1">
+              ${growthBadge}
+              <span class="text-[11px] text-slate-400">ปีงบฯ ${yr}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- KPI 2 -->
+        <div class="metric-card bg-white rounded-2xl p-4 border border-slate-200 shadow-xs flex flex-col justify-between">
+          <div class="flex items-center justify-between text-slate-500">
+            <span class="text-xs font-semibold text-slate-600 uppercase tracking-wider">เฉลี่ยต่อวันทำการ</span>
+            <div class="w-7 h-7 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+          </div>
+          <div class="mt-2">
+            <div class="text-2xl font-bold text-slate-900">${yrData.avg_daily} <span class="text-xs font-normal text-slate-500">ราย/วัน</span></div>
+            <div class="flex items-center justify-between mt-1">
+              <span class="text-[11px] text-slate-500">รอบวันทำการราชการ</span>
+              <span class="text-[11px] text-indigo-600 font-medium">เป้า 80-100</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- KPI 3 -->
+        <div class="metric-card bg-white rounded-2xl p-4 border border-slate-200 shadow-xs flex flex-col justify-between">
+          <div class="flex items-center justify-between text-slate-500">
+            <span class="text-xs font-semibold text-slate-600 uppercase tracking-wider">อายุรกรรม (เรือธง)</span>
+            <div class="w-7 h-7 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+            </div>
+          </div>
+          <div class="mt-2">
+            <div class="text-2xl font-bold text-slate-900">${medClinic.total.toLocaleString()} <span class="text-xs font-normal text-slate-500">ครั้ง</span></div>
+            <div class="flex items-center justify-between mt-1">
+              <span class="text-[11px] font-semibold text-amber-600">${medPct}% ของทั้งหมด</span>
+              <span class="text-[11px] text-slate-400">รหัส 2501</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- KPI 4 -->
+        <div class="metric-card bg-white rounded-2xl p-4 border border-emerald-200 shadow-xs flex flex-col justify-between bg-gradient-to-b from-white to-emerald-50/30">
+          <div class="flex items-center justify-between text-slate-500">
+            <span class="text-xs font-semibold text-emerald-800 uppercase tracking-wider flex items-center gap-1">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+              เจาะเลือดล่วงหน้า
+            </span>
+            <div class="w-7 h-7 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+            </div>
+          </div>
+          <div class="mt-2">
+            <div class="text-2xl font-bold text-emerald-700">${labClinic.total.toLocaleString()} <span class="text-xs font-normal text-emerald-600">ราย</span></div>
+            <div class="flex items-center justify-between mt-1">
+              <span class="text-[11px] font-bold text-emerald-700">${labPct}% ของทั้งหมด</span>
+              <span class="text-[11px] text-emerald-600 font-medium">★ โต +40.4%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- KPI 5 -->
+        <div class="metric-card bg-white rounded-2xl p-4 border border-rose-200 shadow-xs flex flex-col justify-between">
+          <div class="flex items-center justify-between text-slate-500">
+            <span class="text-xs font-semibold text-rose-700 uppercase tracking-wider">ส่งต่อฉุกเฉิน (ER)</span>
+            <div class="w-7 h-7 rounded-lg bg-rose-100 text-rose-600 flex items-center justify-center">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+            </div>
+          </div>
+          <div class="mt-2">
+            <div class="text-2xl font-bold text-rose-600">${yrData.er} <span class="text-xs font-normal text-slate-500">เคส</span></div>
+            <div class="flex items-center justify-between mt-1">
+              <span class="text-[11px] font-semibold text-rose-600">${yrData.er_rate}% อัตราส่งต่อ</span>
+              <span class="text-[11px] text-slate-400">ส่ง รพ.แม่</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Render Multi-Year Bar Chart
+    function renderMultiBarChart() {
+      const container = document.getElementById('multiBarChart');
+      if (!container) return;
+
+      const c67 = DASHBOARD_DATA.by_year['2567'].clinics;
+      const c68 = DASHBOARD_DATA.by_year['2568'].clinics;
+      const c69 = DASHBOARD_DATA.by_year['2569'].clinics;
+
+      let list = c69;
+      if (currentCategory !== 'ALL') {
+        list = list.filter(c => {
+          if (currentCategory === 'MED') return c.code.startsWith('250');
+          if (currentCategory === 'LAB') return c.code === '1836' || c.code === '2515';
+          if (currentCategory === 'NUR') return c.code === '2513';
+          return true;
+        });
+      }
+
+      // Top 7 clinics or filtered
+      const displayClinics = list.slice(0, 7);
+      const maxVal = Math.max(...displayClinics.map(c => {
+        const v67 = (c67.find(x => x.code === c.code) || { total: 0 }).total;
+        const v68 = (c68.find(x => x.code === c.code) || { total: 0 }).total;
+        const v69 = c.total;
+        return Math.max(v67, v68, v69);
+      }));
+
+      let svgHtml = `
+        <svg class="w-full h-full" viewBox="0 0 700 280">
+          <line x1="140" y1="20" x2="680" y2="20" stroke="#f1f5f9" stroke-width="1" />
+          <line x1="140" y1="75" x2="680" y2="75" stroke="#f1f5f9" stroke-width="1" />
+          <line x1="140" y1="130" x2="680" y2="130" stroke="#f1f5f9" stroke-width="1" />
+          <line x1="140" y1="185" x2="680" y2="185" stroke="#f1f5f9" stroke-width="1" />
+          <line x1="140" y1="240" x2="680" y2="240" stroke="#cbd5e1" stroke-width="1.5" />
+      `;
+
+      const chartHeight = 220;
+      const rowGap = chartHeight / displayClinics.length;
+
+      displayClinics.forEach((clinic, idx) => {
+        const v67 = (c67.find(x => x.code === clinic.code) || { total: 0 }).total;
+        const v68 = (c68.find(x => x.code === clinic.code) || { total: 0 }).total;
+        const v69 = clinic.total;
+
+        const yPos = 30 + (idx * rowGap);
+        const barH = Math.min(8, rowGap / 4);
+
+        const w67 = maxVal > 0 ? (v67 / maxVal) * 480 : 0;
+        const w68 = maxVal > 0 ? (v68 / maxVal) * 480 : 0;
+        const w69 = maxVal > 0 ? (v69 / maxVal) * 480 : 0;
+
+        const displayName = clinic.name.length > 18 ? clinic.name.substring(0, 18) + '...' : clinic.name;
+
+        svgHtml += `
+          <!-- Label -->
+          <text x="130" y="${yPos + 12}" text-anchor="end" font-size="11" font-weight="600" fill="#334155">${displayName}</text>
+          
+          <!-- Bar 67 -->
+          <rect x="140" y="${yPos - 4}" width="${Math.max(w67, 2)}" height="${barH}" rx="2" fill="#cbd5e1" opacity="0.9">
+            <title>ปี 67: ${v67.toLocaleString()} ครั้ง</title>
+          </rect>
+
+          <!-- Bar 68 -->
+          <rect x="140" y="${yPos + 5}" width="${Math.max(w68, 2)}" height="${barH}" rx="2" fill="#38bdf8" opacity="0.9">
+            <title>ปี 68: ${v68.toLocaleString()} ครั้ง</title>
+          </rect>
+
+          <!-- Bar 69 -->
+          <rect x="140" y="${yPos + 14}" width="${Math.max(w69, 2)}" height="${barH}" rx="2" fill="#0369a1">
+            <title>ปี 69: ${v69.toLocaleString()} ครั้ง</title>
+          </rect>
+
+          <!-- Value Label 69 -->
+          <text x="${145 + w69}" y="${yPos + 22}" font-size="10" font-weight="bold" fill="#0369a1">${v69.toLocaleString()}</text>
+        `;
+      });
+
+      svgHtml += `
+          <!-- Bottom Legend Axis -->
+          <text x="140" y="260" font-size="9" fill="#94a3b8">0</text>
+          <text x="${140 + 240}" y="260" text-anchor="middle" font-size="9" fill="#94a3b8">${Math.round(maxVal / 2).toLocaleString()}</text>
+          <text x="620" y="260" text-anchor="end" font-size="9" fill="#94a3b8">${maxVal.toLocaleString()} ครั้ง</text>
+        </svg>
+      `;
+
+      container.innerHTML = svgHtml;
+    }
+
+    // Render Donut Chart
+    function renderDonutChart() {
+      const svg = document.getElementById('donutSvg');
+      const legend = document.getElementById('donutLegend');
+      const centerTotal = document.getElementById('donutCenterTotal');
+      const centerYear = document.getElementById('donutCenterYear');
+      const labelYear = document.getElementById('donutYearLabel');
+      if (!svg || !legend) return;
+
+      const yr = currentYear === 'all' ? '2569' : currentYear;
+      labelYear.innerText = 'ปี ' + yr;
+      centerYear.innerText = 'ปีงบฯ ' + yr;
+
+      const clinics = DASHBOARD_DATA.by_year[yr].clinics;
+      const totalVisits = DASHBOARD_DATA.annual_totals[yr].visits;
+      centerTotal.innerText = totalVisits.toLocaleString();
+
+      const r = 60;
+      const circumference = 2 * Math.PI * r;
+      let cumulativeAngle = 0;
+      let svgPaths = '';
+      let legendHtml = '';
+
+      const colors = ['#0284c7', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#06b6d4', '#64748b', '#ef4444', '#14b8a6', '#94a3b8'];
+
+      clinics.forEach((clinic, idx) => {
+        if (clinic.total <= 0) return;
+        const pct = clinic.total / totalVisits;
+        const strokeDasharray = `${pct * circumference} ${circumference}`;
+        const strokeDashoffset = -cumulativeAngle * circumference;
+        const color = colors[idx % colors.length];
+
+        svgPaths += `
+          <circle cx="80" cy="80" r="${r}" fill="none" stroke="${color}" stroke-width="24"
+            stroke-dasharray="${strokeDasharray}" stroke-dashoffset="${strokeDashoffset}"
+            class="transition-all duration-300 hover:opacity-80 cursor-pointer"
+            onclick="openModal('${clinic.code}')">
+            <title>${clinic.name}: ${clinic.total.toLocaleString()} (${(pct * 100).toFixed(1)}%)</title>
+          </circle>
+        `;
+
+        cumulativeAngle += pct;
+
+        if (idx < 5) {
+          legendHtml += `
+            <div class="flex items-center justify-between py-0.5 cursor-pointer hover:bg-slate-50 rounded px-1" onclick="openModal('${clinic.code}')">
+              <div class="flex items-center gap-1.5 truncate max-w-[170px]">
+                <span class="w-2.5 h-2.5 rounded-full shrink-0" style="background-color: ${color}"></span>
+                <span class="text-slate-700 truncate font-medium">${clinic.name}</span>
+              </div>
+              <div class="font-bold text-slate-800 text-right">${(pct * 100).toFixed(1)}%</div>
+            </div>
+          `;
+        }
+      });
+
+      svg.innerHTML = svgPaths;
+      legend.innerHTML = legendHtml;
+    }
+
+    // Render Monthly Trend Chart
+    function renderMonthlyChart() {
+      const container = document.getElementById('monthlyTrendChart');
+      if (!container) return;
+
+      const months = DASHBOARD_DATA.months;
+      const monthly = DASHBOARD_DATA.by_year['2569'].total_monthly;
+      const maxVal = Math.max(...monthly);
+      const minVal = Math.min(...monthly);
+
+      let svgHtml = `
+        <svg class="w-full h-full" viewBox="0 0 850 270">
+          <!-- Background Grid lines -->
+          <line x1="60" y1="20" x2="820" y2="20" stroke="#f1f5f9" stroke-width="1" />
+          <line x1="60" y1="75" x2="820" y2="75" stroke="#f1f5f9" stroke-width="1" />
+          <line x1="60" y1="130" x2="820" y2="130" stroke="#f1f5f9" stroke-width="1" />
+          <line x1="60" y1="185" x2="820" y2="185" stroke="#f1f5f9" stroke-width="1" />
+          <line x1="60" y1="230" x2="820" y2="230" stroke="#cbd5e1" stroke-width="1.5" />
+      `;
+
+      const w = 760 / months.length;
+      let points = [];
+
+      months.forEach((m, idx) => {
+        const val = monthly[idx];
+        const h = (val / 2000) * 190;
+        const x = 75 + (idx * w);
+        const y = 230 - h;
+
+        points.push(`${x + 18},${y}`);
+
+        const isPeak = val === maxVal;
+        const isTrough = val === minVal;
+        let barColor = '#38bdf8';
+        if (isPeak) barColor = '#0284c7';
+        if (isTrough) barColor = '#f43f5e';
+
+        svgHtml += `
+          <!-- Bar -->
+          <rect x="${x}" y="${y}" width="36" height="${h}" rx="4" fill="${barColor}" class="transition hover:opacity-80">
+            <title>${m}: ${val.toLocaleString()} ครั้ง</title>
+          </rect>
+
+          <!-- Value on top of bar -->
+          <text x="${x + 18}" y="${y - 7}" text-anchor="middle" font-size="10" font-weight="${isPeak ? 'bold' : '600'}" fill="${isPeak ? '#0284c7' : (isTrough ? '#e11d48' : '#334155')}">
+            ${val.toLocaleString()}
+          </text>
+
+          <!-- Month Label -->
+          <text x="${x + 18}" y="250" text-anchor="middle" font-size="11" font-weight="600" fill="#475569">${m}</text>
+        `;
+      });
+
+      // Trend line
+      svgHtml += `
+        <polyline fill="none" stroke="#6366f1" stroke-width="2.5" stroke-dasharray="4" points="${points.join(' ')}" />
+      `;
+
+      svgHtml += `</svg>`;
+      container.innerHTML = svgHtml;
+    }
+
+    // Render ER Monthly Chart
+    function renderErChart() {
+      const container = document.getElementById('erMonthlyBarChart');
+      if (!container) return;
+
+      const months = DASHBOARD_DATA.months;
+      const erMonthly = DASHBOARD_DATA.by_year['2569'].er_monthly;
+      const notes = DASHBOARD_DATA.by_year['2569'].er_notes;
+
+      let svg = `<svg class="w-full h-full" viewBox="0 0 600 150">`;
+      const w = 540 / months.length;
+
+      months.forEach((m, idx) => {
+        const count = erMonthly[idx];
+        const h = count * 22;
+        const x = 35 + (idx * w);
+        const y = 120 - h;
+        const note = notes[m] || '';
+
+        svg += `
+          <rect x="${x}" y="${y}" width="22" height="${h}" rx="3" fill="#f43f5e" opacity="0.85">
+            <title>${m}: ${count} เคส (${note})</title>
+          </rect>
+          <text x="${x + 11}" y="${y - 4}" text-anchor="middle" font-size="10" font-weight="bold" fill="#be123c">${count}</text>
+          <text x="${x + 11}" y="136" text-anchor="middle" font-size="9" font-weight="500" fill="#64748b">${m}</text>
+        `;
+      });
+
+      svg += `</svg>`;
+      container.innerHTML = svg;
+    }
+
+    // Render Clinic Matrix Table
+    function renderClinicTable() {
+      const tbody = document.getElementById('clinicTableBody');
+      if (!tbody) return;
+
+      const c67 = DASHBOARD_DATA.by_year['2567'].clinics;
+      const c68 = DASHBOARD_DATA.by_year['2568'].clinics;
+      const c69 = DASHBOARD_DATA.by_year['2569'].clinics;
+
+      let list = c69;
+      if (currentCategory !== 'ALL') {
+        list = list.filter(c => {
+          if (currentCategory === 'MED') return c.code.startsWith('250');
+          if (currentCategory === 'LAB') return c.code === '1836' || c.code === '2515';
+          if (currentCategory === 'NUR') return c.code === '2513';
+          return true;
+        });
+      }
+
+      let html = '';
+      list.forEach(c => {
+        const t67 = (c67.find(x => x.code === c.code) || { total: 0 }).total;
+        const t68 = (c68.find(x => x.code === c.code) || { total: 0 }).total;
+        const t69 = c.total;
+
+        const yoy = t68 > 0 ? (((t69 - t68) / t68) * 100).toFixed(1) : '0.0';
+        const threeYr = t67 > 0 ? (((t69 - t67) / t67) * 100).toFixed(1) : '0.0';
+        const share69 = ((t69 / 18464) * 100).toFixed(1);
+
+        const yoyColor = yoy > 0 ? 'text-emerald-600 font-semibold' : (yoy < 0 ? 'text-rose-600 font-semibold' : 'text-slate-500');
+        const threeYrColor = threeYr > 0 ? 'text-emerald-600 font-semibold' : (threeYr < 0 ? 'text-rose-600 font-semibold' : 'text-slate-500');
+
+        html += `
+          <tr class="hover:bg-slate-50/80 transition cursor-pointer" onclick="toggleRowDetail('${c.code}')">
+            <td class="py-3 px-4 font-mono font-semibold text-sky-700">${c.code}</td>
+            <td class="py-3 px-4">
+              <div class="font-semibold text-slate-800">${c.name}</div>
+              <div class="text-[11px] text-slate-400">${c.raw_name}</div>
+            </td>
+            <td class="py-3 px-3">
+              <span class="inline-block px-2 py-0.5 rounded text-[10px] font-medium bg-slate-100 text-slate-700">${c.category}</span>
+            </td>
+            <td class="py-3 px-3 text-right text-slate-600">${t67.toLocaleString()}</td>
+            <td class="py-3 px-3 text-right text-slate-600">${t68.toLocaleString()}</td>
+            <td class="py-3 px-3 text-right font-bold text-slate-900">${t69.toLocaleString()}</td>
+            <td class="py-3 px-3 text-right ${yoyColor}">${yoy > 0 ? '+' + yoy : yoy}%</td>
+            <td class="py-3 px-3 text-right ${threeYrColor}">${threeYr > 0 ? '+' + threeYr : threeYr}%</td>
+            <td class="py-3 px-3 text-right font-bold text-slate-800">${share69}%</td>
+            <td class="py-3 px-4 text-center">
+              <button class="px-2 py-1 rounded bg-slate-100 hover:bg-sky-100 hover:text-sky-700 text-slate-600 text-[11px] font-medium transition" onclick="event.stopPropagation(); openModal('${c.code}')">
+                กราฟรายเดือน
+              </button>
+            </td>
+          </tr>
+          <tr id="detail-row-${c.code}" class="hidden bg-slate-50/90 border-y border-slate-200">
+            <td colspan="10" class="p-4">
+              <div class="space-y-2">
+                <div class="text-xs font-bold text-slate-700 flex items-center justify-between">
+                  <span>สถิติผู้รับบริการรายเดือน ปี 2569: ${c.name} (รวม ${t69.toLocaleString()} ครั้ง)</span>
+                  <span class="text-slate-400 font-normal">คลิกเพื่อย่อกลับ</span>
+                </div>
+                <div class="grid grid-cols-6 sm:grid-cols-12 gap-1.5 text-center text-xs">
+                  ${c.monthly.map((mVal, mIdx) => `
+                    <div class="bg-white p-2 rounded-lg border border-slate-200 shadow-2xs">
+                      <div class="text-[10px] text-slate-400 font-medium">${DASHBOARD_DATA.months[mIdx]}</div>
+                      <div class="text-xs font-bold text-slate-800 mt-0.5">${mVal.toLocaleString()}</div>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            </td>
+          </tr>
+        `;
+      });
+
+      tbody.innerHTML = html;
+    }
+
+    function toggleRowDetail(code) {
+      const row = document.getElementById('detail-row-' + code);
+      if (row) row.classList.toggle('hidden');
+    }
+
+    // Filter Table Search
+    function filterTable(query) {
+      query = query.toLowerCase();
+      document.querySelectorAll('#clinicTableBody tr').forEach(tr => {
+        if (tr.id.startsWith('detail-row')) return;
+        const text = tr.innerText.toLowerCase();
+        tr.style.display = text.includes(query) ? '' : 'none';
+      });
+    }
+
+    // Detail Modal
+    function openModal(code) {
+      const clinic = DASHBOARD_DATA.by_year['2569'].clinics.find(c => c.code === code);
+      if (!clinic) return;
+
+      const c67 = (DASHBOARD_DATA.by_year['2567'].clinics.find(x => x.code === code) || { total: 0 }).total;
+      const c68 = (DASHBOARD_DATA.by_year['2568'].clinics.find(x => x.code === code) || { total: 0 }).total;
+      const c69 = clinic.total;
+
+      document.getElementById('modalClinicCode').innerText = 'รหัส ' + clinic.code;
+      document.getElementById('modalClinicName').innerText = clinic.name;
+      document.getElementById('modalTot67').innerText = c67.toLocaleString() + ' ครั้ง';
+      document.getElementById('modalTot68').innerText = c68.toLocaleString() + ' ครั้ง';
+      document.getElementById('modalTot69').innerText = c69.toLocaleString() + ' ครั้ง';
+
+      const grid = document.getElementById('modalMonthsGrid');
+      grid.innerHTML = clinic.monthly.map((val, idx) => `
+        <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+          <div class="text-[10px] text-slate-400 font-medium">${DASHBOARD_DATA.months[idx]}</div>
+          <div class="text-sm font-bold text-slate-900 mt-1">${val.toLocaleString()}</div>
+        </div>
+      `).join('');
+
+      document.getElementById('detailModal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('detailModal').classList.add('hidden');
+    }
+
+    // FY2570 Simulator
+    function runSimulation() {
+      const preLab = parseInt(document.getElementById('simRangePreLab').value);
+      const med = parseInt(document.getElementById('simRangeMed').value);
+      const other = parseInt(document.getElementById('simRangeOther').value);
+
+      const baseLab = 4014;
+      const baseMed = 12465;
+      const baseOther = 1985;
+      const baseTotal = 18464;
+
+      const labPct = (((preLab - baseLab) / baseLab) * 100).toFixed(1);
+      const medPct = (((med - baseMed) / baseMed) * 100).toFixed(1);
+      const otherPct = (((other - baseOther) / baseOther) * 100).toFixed(1);
+
+      document.getElementById('simValPreLab').innerText = `${preLab.toLocaleString()} ราย (${labPct >= 0 ? '+' : ''}${labPct}%)`;
+      document.getElementById('simValMed').innerText = `${med.toLocaleString()} ราย (${medPct >= 0 ? '+' : ''}${medPct}%)`;
+      document.getElementById('simValOther').innerText = `${other.toLocaleString()} ราย (${otherPct >= 0 ? '+' : ''}${otherPct}%)`;
+
+      const simTotal = preLab + med + other;
+      const totalGrowth = (((simTotal - baseTotal) / baseTotal) * 100).toFixed(1);
+      const simDaily = Math.round(simTotal / 220); // 220 working days
+      const simPreLabPct = ((preLab / simTotal) * 100).toFixed(1);
+
+      document.getElementById('simResultTotal').innerText = simTotal.toLocaleString() + ' ราย';
+      document.getElementById('simResultGrowth').innerText = `${totalGrowth >= 0 ? '+' : ''}${totalGrowth}% เทียบกับปี 2569`;
+      document.getElementById('simResultDaily').innerText = simDaily + ' ราย/วัน';
+      document.getElementById('simResultPreLabPct').innerText = simPreLabPct + '%';
+
+      // Staffing note
+      const phlebStaff = preLab >= 5000 ? '3 ท่าน' : '2 ท่าน';
+      const medDoctor = med >= 14000 ? '2 ท่านเต็มเวลา' : '1-2 ท่าน';
+      document.getElementById('simResourceText').innerHTML = `
+        • แพทย์ตรวจอายุรกรรม: ${medDoctor}/วัน<br>
+        • เจ้าหน้าที่เจาะเลือด: ${phlebStaff} ช่วงเช้า (07:00 - 11:00 น.)<br>
+        • พยาบาลประจำคลินิกและงานหัตถการ: 3-4 ท่าน
+      `;
+    }
+
+    function resetSimulation() {
+      document.getElementById('simRangePreLab').value = 4014;
+      document.getElementById('simRangeMed').value = 12465;
+      document.getElementById('simRangeOther').value = 1985;
+      runSimulation();
+    }
+
+    // Export CSV
+    function exportToCSV() {
+      const clinics = DASHBOARD_DATA.by_year['2569'].clinics;
+      let csv = 'รหัสห้องตรวจ,ชื่อคลินิก,หมวดหมู่,ยอดปี67,ยอดปี68,ยอดปี69,สัดส่วนปี69\n';
+      clinics.forEach(c => {
+        const t67 = (DASHBOARD_DATA.by_year['2567'].clinics.find(x => x.code === c.code) || { total: 0 }).total;
+        const t68 = (DASHBOARD_DATA.by_year['2568'].clinics.find(x => x.code === c.code) || { total: 0 }).total;
+        const pct = ((c.total / 18464) * 100).toFixed(2);
+        csv += `"${c.code}","${c.name}","${c.category}",${t67},${t68},${c.total},${pct}%\n`;
+      });
+
+      const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'NKP_Rajavithi_Service_Stats_FY2567_2569.csv';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+  </script>
+</body>
+</html>
